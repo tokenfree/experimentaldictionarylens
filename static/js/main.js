@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('wordSearch');
     const wordTitle = document.getElementById('currentWord');
+    const wordSubtitle = document.querySelector('.word-subtitle');
     const definitionContent = document.querySelector('.definition-content');
     const carouselInner = document.querySelector('.carousel-inner');
     const prevButton = document.getElementById('prevButton');
@@ -10,6 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessage = document.querySelector('.error-message');
     const privacyNotice = document.getElementById('privacyNotice');
     const privacyClose = document.getElementById('privacyClose');
+    
+    // History sidebar elements
+    const historySidebar = document.getElementById('historySidebar');
+    const historyToggle = document.getElementById('historyToggle');
+    const sidebarClose = document.getElementById('sidebarClose');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const historyList = document.getElementById('historyList');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
     let searchTimeout;
     let searchHistory = [];
@@ -29,6 +38,44 @@ document.addEventListener('DOMContentLoaded', function() {
         privacyNotice.style.display = 'none';
         localStorage.setItem('privacyNoticeDismissed', 'true');
     });
+    
+    // History sidebar handlers
+    historyToggle.addEventListener('click', function() {
+        historySidebar.classList.add('active');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    function closeSidebar() {
+        historySidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    sidebarClose.addEventListener('click', closeSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    
+    clearHistoryBtn.addEventListener('click', function() {
+        if (confirm('Clear all search history?')) {
+            searchHistory = [];
+            currentHistoryIndex = -1;
+            localStorage.removeItem('searchHistory');
+            updateHistoryUI();
+            updateNavigationButtons();
+        }
+    });
+    
+    // Load history from localStorage
+    const savedHistory = localStorage.getItem('searchHistory');
+    if (savedHistory) {
+        try {
+            searchHistory = JSON.parse(savedHistory);
+            currentHistoryIndex = searchHistory.length - 1;
+            updateHistoryUI();
+        } catch (e) {
+            console.error('Failed to load history:', e);
+        }
+    }
 
     function makeTextClickable(text) {
         if (!text) return '';
@@ -83,8 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
         isNavigating = false;
 
         try {
-            loading.style.display = 'block';
-            errorMessage.style.display = 'none';
+            loading.classList.add('active');
+            errorMessage.textContent = '';
             
             const response = await fetch(`/api/word/${word}`, {
                 signal: currentFetchController.signal
@@ -93,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentFetchController = null;
 
             if (data.error) {
-                loading.style.display = 'none';
+                loading.classList.remove('active');
                 showError('Word not found or connection error occurred');
                 
                 // Still add failed searches to history for navigation consistency
@@ -103,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            loading.style.display = 'none';
+            loading.classList.remove('active');
             
             // Update currentWord BEFORE updating UI to ensure synchronization
             currentWord = word;
@@ -123,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            loading.style.display = 'none';
+            loading.classList.remove('active');
             console.error('Error:', error);
             showError('Failed to fetch word information');
             
@@ -142,6 +189,9 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Update word title with proper capitalization
             wordTitle.textContent = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            if (wordSubtitle) {
+                wordSubtitle.style.display = 'none';
+            }
 
             // Update definition
             if (data.definition) {
@@ -223,8 +273,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 carouselInner.innerHTML = `
                     <div class="carousel-item active">
-                        <div class="d-flex align-items-center justify-content-center" style="height: 300px; background: rgba(118, 118, 128, 0.08);">
-                            <p class="text-muted">No images available for "${word}"</p>
+                        <div class="empty-image-state">
+                            <i class="fas fa-image empty-icon"></i>
+                            <p>No images available for "${word}"</p>
                         </div>
                     </div>
                 `;
@@ -283,7 +334,41 @@ document.addEventListener('DOMContentLoaded', function() {
         searchHistory.push(word);
         currentHistoryIndex = searchHistory.length - 1;
         
+        // Save to localStorage
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        
         updateNavigationButtons();
+        updateHistoryUI();
+    }
+    
+    function updateHistoryUI() {
+        if (searchHistory.length === 0) {
+            historyList.innerHTML = '<p class="empty-state">No search history yet</p>';
+            return;
+        }
+        
+        // Reverse to show most recent first
+        const reversedHistory = [...searchHistory].reverse();
+        historyList.innerHTML = reversedHistory.map((word, index) => {
+            const actualIndex = searchHistory.length - 1 - index;
+            const isActive = actualIndex === currentHistoryIndex;
+            return `
+                <div class="history-item ${isActive ? 'active' : ''}" data-word="${word}" data-index="${actualIndex}">
+                    <i class="fas fa-clock"></i>
+                    <span class="history-item-text">${word}</span>
+                </div>
+            `;
+        }).join('');
+        
+        // Add click handlers
+        document.querySelectorAll('.history-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const word = this.getAttribute('data-word');
+                searchInput.value = word;
+                fetchWordInfo(word, false);
+                closeSidebar();
+            });
+        });
     }
 
     // Navigation button handlers
