@@ -1,0 +1,58 @@
+{
+  "name": "Dictionary Lens",
+  "short_name": "DictLens",
+  "description": "Intelligent dictionary with definitions, synonyms, antonyms, and contextual images",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007AFF",
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["education", "productivity", "reference"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/static/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search Word",
+      "url": "/",
+      "description": "Search for a word definition"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dictionary Lens on Desktop"
+    },
+    {
+      "src": "/static/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dictionary Lens on Mobile"
+    }
+  ],
+  "prefer_related_applications": false
+}

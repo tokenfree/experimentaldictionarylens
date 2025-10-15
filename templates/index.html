@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Dictionary Lens - An intelligent dictionary app with definitions, synonyms, antonyms, and contextual images for enhanced learning.">
+    <meta name="keywords" content="dictionary, vocabulary, learning, education, synonyms, antonyms, word definitions">
+    <meta name="author" content="Dictionary Lens Team">
+    <meta name="theme-color" content="#007AFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Dictionary Lens">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dictionary Lens - Intelligent Dictionary App">
+    <meta property="og:description" content="Explore words with definitions, synonyms, antonyms, and contextual images.">
+    <meta property="og:site_name" content="Dictionary Lens">
+    
+    <title>Dictionary Lens - Smart Dictionary with Visual Learning</title>
+    
+    <!-- Favicon -->
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon"/>
+    <link rel="apple-touch-icon" href="/static/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+</head>
+<body>
+    <div class="container" role="main">
+        <!-- Privacy Notice Banner -->
+        <div class="privacy-notice" id="privacyNotice">
+            <div class="privacy-content">
+                <p><i class="fas fa-info-circle"></i> This app sends your searches to third-party APIs. <a href="https://github.com/yourusername/DictionaryLens/blob/main/PRIVACY_POLICY.md" target="_blank" rel="noopener">Privacy Policy</a></p>
+                <button class="privacy-close" id="privacyClose" aria-label="Dismiss privacy notice">×</button>
+            </div>
+        </div>
+        
+        <nav class="navigation-container mb-4" aria-label="Search and navigation controls">
+            <div class="d-flex justify-content-center align-items-center gap-2 mb-3" role="toolbar" aria-label="Word navigation">
+                <button class="nav-button" id="prevButton" disabled aria-label="Previous word" title="Go to previous word">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                </button>
+                <button class="nav-button clickable-toggle" id="clickableToggle" aria-label="Toggle clickable mode" aria-pressed="false" title="Enable clickable words in definitions">
+                    <i class="fas fa-hand-pointer" aria-hidden="true"></i>
+                </button>
+                <button class="nav-button" id="nextButton" disabled aria-label="Next word" title="Go to next word">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
+            <label for="wordSearch" class="visually-hidden">Search for a word</label>
+            <input type="search" id="wordSearch" class="search-input" placeholder="Type a word to explore..." aria-label="Word search" autocomplete="off" spellcheck="false">
+            <div class="loading" role="status" aria-live="polite" aria-label="Loading word information">
+                <div class="loading-spinner" aria-hidden="true"></div>
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="error-message" role="alert" aria-live="assertive"></div>
+        </nav>
+
+        <h1 class="word text-center" id="currentWord" aria-live="polite">Word</h1>
+
+        <div class="content row">
+            <section class="col-md-4 mb-4" aria-label="Word images">
+                <div id="wordImages" class="carousel slide" data-bs-ride="carousel" aria-roledescription="carousel" aria-label="Images related to the word">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="d-flex align-items-center justify-content-center" style="height: 300px; background: rgba(118, 118, 128, 0.08);">
+                                <p class="text-muted">Search for a word to see related images</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-controls" role="group" aria-label="Image carousel controls">
+                    <button class="btn" type="button" data-bs-target="#wordImages" data-bs-slide="prev" aria-label="Previous image">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="btn" type="button" data-bs-target="#wordImages" data-bs-slide="next" aria-label="Next image">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="col-md-8" aria-label="Word definition and details">
+                <div class="definition-container">
+                    <article id="wordDefinition" class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">Definition</h2>
+                            <div class="definition-content" role="region" aria-live="polite">
+                                <p class="text-muted">Enter a word in the search box above to see its definition and related images.</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

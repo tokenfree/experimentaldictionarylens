@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "dictionary-lens"
+version = "1.0.0"
+description = "An intelligent dictionary application with definitions, synonyms, and contextual images"
+authors = ["Dictionary Lens Team"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/yourusername/DictionaryLens"
+repository = "https://github.com/yourusername/DictionaryLens"
+keywords = ["dictionary", "education", "vocabulary", "learning"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = ">=3.1.0"
+flask-cors = ">=4.0.0"
+flask-limiter = ">=3.5.0"
+gunicorn = ">=23.0.0"
+requests = ">=2.32.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.4.0"
+pytest-cov = ">=4.1.0"
+black = ">=23.0.0"
+ruff = ">=0.1.0"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "W", "I", "N"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
