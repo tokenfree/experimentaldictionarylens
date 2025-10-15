@@ -32,74 +32,125 @@
     <link rel="manifest" href="/static/manifest.json">
 </head>
 <body>
-    <div class="container" role="main">
-        <!-- Privacy Notice Banner -->
-        <div class="privacy-notice" id="privacyNotice">
-            <div class="privacy-content">
-                <p><i class="fas fa-info-circle"></i> This app sends your searches to third-party APIs. <a href="https://github.com/yourusername/DictionaryLens/blob/main/PRIVACY_POLICY.md" target="_blank" rel="noopener">Privacy Policy</a></p>
-                <button class="privacy-close" id="privacyClose" aria-label="Dismiss privacy notice">×</button>
-            </div>
+    <!-- Privacy Notice Banner -->
+    <div class="privacy-notice" id="privacyNotice">
+        <div class="privacy-content">
+            <p><i class="fas fa-info-circle"></i> This app sends your searches to third-party APIs. <a href="https://github.com/yourusername/DictionaryLens/blob/main/PRIVACY_POLICY.md" target="_blank" rel="noopener">Privacy Policy</a></p>
+            <button class="privacy-close" id="privacyClose" aria-label="Dismiss privacy notice">×</button>
         </div>
-        
-        <nav class="navigation-container mb-4" aria-label="Search and navigation controls">
-            <div class="d-flex justify-content-center align-items-center gap-2 mb-3" role="toolbar" aria-label="Word navigation">
-                <button class="nav-button" id="prevButton" disabled aria-label="Previous word" title="Go to previous word">
-                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+    </div>
+
+    <!-- History Sidebar -->
+    <aside class="history-sidebar" id="historySidebar" aria-label="Search history">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Recent Searches</h2>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close history sidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content" id="historyList">
+            <p class="empty-state">No search history yet</p>
+        </div>
+        <div class="sidebar-footer">
+            <button class="clear-history-btn" id="clearHistoryBtn">
+                <i class="fas fa-trash"></i> Clear History
+            </button>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main App Container -->
+    <div class="app-wrapper" id="appWrapper">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav" role="banner">
+            <div class="top-nav-content">
+                <button class="history-toggle" id="historyToggle" aria-label="Toggle search history" title="Search History">
+                    <i class="fas fa-clock-rotate-left"></i>
                 </button>
-                <button class="nav-button clickable-toggle" id="clickableToggle" aria-label="Toggle clickable mode" aria-pressed="false" title="Enable clickable words in definitions">
-                    <i class="fas fa-hand-pointer" aria-hidden="true"></i>
-                </button>
-                <button class="nav-button" id="nextButton" disabled aria-label="Next word" title="Go to next word">
-                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                </button>
+                <h1 class="app-title">Dictionary Lens</h1>
+                <div class="nav-actions">
+                    <button class="nav-button" id="clickableToggle" aria-label="Toggle clickable mode" aria-pressed="false" title="Clickable Mode">
+                        <i class="fas fa-hand-pointer"></i>
+                    </button>
+                </div>
             </div>
-            <label for="wordSearch" class="visually-hidden">Search for a word</label>
-            <input type="search" id="wordSearch" class="search-input" placeholder="Type a word to explore..." aria-label="Word search" autocomplete="off" spellcheck="false">
+        </header>
+
+        <!-- Search Container -->
+        <div class="search-container">
+            <div class="search-bar-wrapper">
+                <i class="fas fa-magnifying-glass search-icon"></i>
+                <label for="wordSearch" class="visually-hidden">Search for a word</label>
+                <input type="search" id="wordSearch" class="search-input" placeholder="Search for a word..." aria-label="Word search" autocomplete="off" spellcheck="false">
+                <div class="nav-arrows">
+                    <button class="arrow-button" id="prevButton" disabled aria-label="Previous word" title="Previous">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="arrow-button" id="nextButton" disabled aria-label="Next word" title="Next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
             <div class="loading" role="status" aria-live="polite" aria-label="Loading word information">
                 <div class="loading-spinner" aria-hidden="true"></div>
-                <span class="visually-hidden">Loading...</span>
+                <span class="loading-text">Loading...</span>
             </div>
             <div class="error-message" role="alert" aria-live="assertive"></div>
-        </nav>
+        </div>
 
-        <h1 class="word text-center" id="currentWord" aria-live="polite">Word</h1>
+        <!-- Content Area -->
+        <main class="main-content" role="main">
+            <!-- Word Title -->
+            <div class="word-header">
+                <h2 class="word-title" id="currentWord">Welcome</h2>
+                <p class="word-subtitle">Start by searching for a word</p>
+            </div>
 
-        <div class="content row">
-            <section class="col-md-4 mb-4" aria-label="Word images">
-                <div id="wordImages" class="carousel slide" data-bs-ride="carousel" aria-roledescription="carousel" aria-label="Images related to the word">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="d-flex align-items-center justify-content-center" style="height: 300px; background: rgba(118, 118, 128, 0.08);">
-                                <p class="text-muted">Search for a word to see related images</p>
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Images Section -->
+                <section class="images-section" aria-label="Word images">
+                    <div class="section-card">
+                        <div id="wordImages" class="image-carousel" aria-roledescription="carousel" aria-label="Images related to the word">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="empty-image-state">
+                                        <i class="fas fa-image empty-icon"></i>
+                                        <p>Images will appear here</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="carousel-controls" role="group" aria-label="Image carousel controls">
+                            <button class="carousel-btn" type="button" data-bs-target="#wordImages" data-bs-slide="prev" aria-label="Previous image">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-btn" type="button" data-bs-target="#wordImages" data-bs-slide="next" aria-label="Next image">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="carousel-controls" role="group" aria-label="Image carousel controls">
-                    <button class="btn" type="button" data-bs-target="#wordImages" data-bs-slide="prev" aria-label="Previous image">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="btn" type="button" data-bs-target="#wordImages" data-bs-slide="next" aria-label="Next image">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </section>
+                </section>
 
-            <section class="col-md-8" aria-label="Word definition and details">
-                <div class="definition-container">
-                    <article id="wordDefinition" class="card">
-                        <div class="card-body">
-                            <h2 class="card-title">Definition</h2>
-                            <div class="definition-content" role="region" aria-live="polite">
-                                <p class="text-muted">Enter a word in the search box above to see its definition and related images.</p>
+                <!-- Definition Section -->
+                <section class="definition-section" aria-label="Word definition and details">
+                    <article class="section-card" id="wordDefinition">
+                        <div class="section-header">
+                            <h3 class="section-title">Definition</h3>
+                        </div>
+                        <div class="definition-content" role="region" aria-live="polite">
+                            <div class="empty-definition-state">
+                                <i class="fas fa-book-open empty-icon"></i>
+                                <p>Enter a word to see its definition, synonyms, and examples</p>
                             </div>
                         </div>
                     </article>
-                </div>
-            </section>
-        </div>
+                </section>
+            </div>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
